@@ -1,0 +1,126 @@
+DROP DATABASE IF EXISTS soccer_league;
+
+CREATE DATABASE soccer_league;
+
+\c soccer_league
+
+DROP TABLE IF EXISTS teams CASCADE;
+DROP TABLE IF EXISTS players CASCADE;
+DROP TABLE IF EXISTS goals CASCADE;
+DROP TABLE IF EXISTS referees CASCADE;
+DROP TABLE IF EXISTS matches CASCADE;
+DROP TABLE IF EXISTS results CASCADE;
+DROP TABLE IF EXISTS season CASCADE;
+
+CREATE TABLE teams (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE players (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    height NUMERIC(5, 2),
+    current_team_id INTEGER NOT NULL REFERENCES teams
+);
+
+CREATE TABLE referees (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE season (
+    id SERIAL PRIMARY KEY,
+    start_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    end_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE matches (
+    id SERIAL PRIMARY KEY,
+    home_team_id INTEGER NOT NULL REFERENCES teams,
+    away_team_id INTEGER NOT NULL REFERENCES teams,
+    stadium TEXT NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    season_id INTEGER NOT NULL REFERENCES season,
+    head_referee INTEGER NOT NULL REFERENCES referees,
+    assistant_referee_1_id INTEGER NOT NULL REFERENCES referees,
+    assistant_referee_2_id INTEGER NOT NULL REFERENCES referees
+);
+
+CREATE TABLE goals (
+    id SERIAL PRIMARY KEY,
+    player_id INTEGER NOT NULL REFERENCES players,
+    match_id INTEGER NOT NULL REFERENCES matches
+);
+
+CREATE TABLE results (
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER NOT NULL REFERENCES teams,
+    match_id INTEGER NOT NULL REFERENCES matches,
+    result TEXT NOT NULL
+);
+
+INSERT INTO teams (name) 
+VALUES ('Chelsea FC'),('Manchester City');
+
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Edouard', 'Mendy', 29, 1.97, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Ceasar', 'Azpilicueta', 32, 1.77, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Andres', 'Christensen', 20, 1.88, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Antonio', 'Rudiger', 20, 1.92, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Reece', 'James', 20, 1.79, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Mateo', 'Kovacic', 27, 1.79, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Luiz Frello', 'Jorginho', 20, 1.55, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Callum', 'Hudson-Odoi', 21, 1.55, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Mason', 'Mount', 22, 1.56, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Christain', 'Pulisic', 23, 1.55, 1);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Romelu', 'Lukaku', 20, 1.92, 1);
+
+
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Santana', 'Ederson', 28, 1.92, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Joao', 'Cancelo', 27, 1.82, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Ruben', 'Dias', 24, 1.88, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Amyeric', 'Laporte', 27, 1.92, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Nathan', 'Ake', 26, 1.56, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('kevin', 'De Bruyne', 30, 1.79, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Hernández', 'Rodri', 25, 1.92, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Bernando', 'Silva', 27, 1.77, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Riyad', 'Mahrez', 30, 1.55, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Gabriel', 'Jesus', 22, 1.798, 2);
+INSERT INTO players (first_name, last_name,  age, height, current_team_id)
+VALUES('Raheem', 'Streling', 23, 1.74, 2);
+
+INSERT INTO referees (name) VALUES ('Martin Arkinson'),('Mike Dean'),('Michael Oliver');
+
+INSERT INTO season (start_date, end_date) VALUES ('2021-08-14', '2021-05-22');
+
+INSERT INTO matches (home_team_id, away_team_id, stadium, date, start_time, end_time, season_id, head_referee, assistant_referee_1_id, assistant_referee_2_id)
+VALUES(1, 2, 'Stamford bridge', '2022-05-10', '17:00:00', '19:00:00', 1, 1, 2, 3);
+
+INSERT INTO goals (player_id, match_id) VALUES (11, 1);
+
+INSERT INTO results (team_id, match_id, result) VALUES (1, 1, 'ChelseaFC 2 - 1 Manchester City');
